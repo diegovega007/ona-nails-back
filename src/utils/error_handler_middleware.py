@@ -2,6 +2,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import FastAPI, status
 from fastapi.requests import Request
 from fastapi.responses import Response, JSONResponse
+from fastapi.exceptions import HTTPException
 from sqlalchemy.exc import SQLAlchemyError
 import logging
 

@@ -43,4 +43,18 @@ class ClientResponseDTO(BaseModel):
     cellphone: str
     email: Optional[str] = None
     created_at: datetime
-    modified_at: datetime
+    modified_at: Optional[datetime] = None
+
+    class Config:
+        from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "id": 1,
+                "name": "John",
+                "last_name": "Doe",
+                "cellphone": "+523178901234",
+                "email": "john.doe@example.com",
+                "created_at": "2021-01-01T00:00:00Z",
+                "modified_at": "2021-01-01T00:00:00Z"
+            }
+        }

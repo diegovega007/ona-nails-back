@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Depends, status
-from fastapi.responses import JSONResponse
 
 from ..services import ServiceService
 from ..dtos import CreateServiceDTO, UpdateServiceDTO, ServiceResponseDTO

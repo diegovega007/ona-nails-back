@@ -1,2 +1,30 @@
-/.env
-/venv
+# Entorno
+.env
+.env.*
+!.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.cpython-* 
+*.so
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Base de datos
+*.db
+*.sqlite
+*.sqlite3
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
