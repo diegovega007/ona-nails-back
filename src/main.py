@@ -3,11 +3,13 @@ from .config import API_VERSION, create_db_and_tables
 from .utils.error_handler_middleware import ErrorHandlerMiddleware
 
 #Registro de modelos
-from .models import Service, Client, Appointment
+from .models import Service, Client, Appointment, User, UserSession
 
 #Rutas
 from .routes.service_route import router as service_router
 from .routes.appointment_route import router as appointment_router
+from .routes.user_route import router as user_router
+from .routes.login_route import router as login_router
 
 app = FastAPI(
     title="OnaNails API",
@@ -20,5 +22,7 @@ create_db_and_tables()
 app.add_middleware(ErrorHandlerMiddleware)
 
 #Registro de rutas
+app.include_router(login_router)
+app.include_router(user_router)
 app.include_router(service_router)
 app.include_router(appointment_router)
