@@ -43,3 +43,13 @@ class LoginResponseDTO(BaseModel):
                 }
             }
         }
+
+class RefreshSessionRequestDTO(BaseModel):
+    refresh_token: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "refresh_token": "refresh_token"
+            }
+        }

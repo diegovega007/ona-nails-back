@@ -1,7 +1,7 @@
 from ..repositories import UserRepository, UserSessionRepository
 from ..services.auth_service import AuthService
 from ..dtos import LoginRequestDTO, LoginResponseDTO, UserResponseDTO, CreateUserSessionDTO
-from ..exeptions import UserNotFound, UserInactive, InvalidCredentialsException
+from ..exeptions import UserNotFound, UserInactive, InvalidCredentialsException, UserSessionNotFound, TokenExpiredException, UserSessionRevoked
 from datetime import datetime, timedelta
 import os
 from ..models import UserSession
@@ -60,4 +60,31 @@ class LoginService:
             user=UserResponseDTO.model_validate(user)
         )
 
-    
+    def logout(self, refresh_token: str) -> bool:
+        user_session = self.user_session_repository.get_by_refresh_token(refresh_token)
+        if not user_session:
+            raise UserSessionNotFound()
+        self.user_session_repository.revoke_refresh_token(refresh_token)
+        return True
+
+    def refresh_session(self, refresh_token: str) -> LoginResponseDTO:
+        user_session = self.user_session_repository.get_by_refresh_token(refresh_token)
+        if not user_session:
+            raise UserSessionNotFound()
+        if user_session.is_revoked:
+            raise UserSessionRevoked()
+        if user_session.expires_at < datetime.now():
+            self.user_session_repository.revoke_refresh_token(refresh_token)
+            raise TokenExpiredException()
+
+        token = self.auth_service.encode_token(
+            user_session.user.email,
+            user_session.user.password,
+            timedelta(minutes=self.ACCESS_TOKEN_EXPIRE_MINUTES)
+        )
+
+        return LoginResponseDTO(
+            token=token,
+            refresh_token=refresh_token,
+            user=UserResponseDTO.model_validate(user_session.user)
+        )
