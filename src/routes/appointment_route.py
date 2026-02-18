@@ -6,6 +6,7 @@ from ..repositories import AppointmentRepository, ClientRepository, ServiceRepos
 from ..config import get_session
 from sqlmodel import Session
 from ..models import AppointmentStatus
+from ..utils.auth_dependency import authorization_header
 from datetime import datetime
 
 def get_appointment_service(session: Session = Depends(get_session)) -> AppointmentService:
@@ -39,5 +40,5 @@ def update_appointment(appointment_dto: UpdateAppointmentDTO, appointment_servic
     return appointment_service.update_appointment(appointment_dto)
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_appointment(id: int, appointment_service: AppointmentService = Depends(get_appointment_service)):
+def delete_appointment(id: int, appointment_service: AppointmentService = Depends(get_appointment_service), auth: dict = Depends(authorization_header)):
     return appointment_service.delete_appointment(id)
