@@ -3,5 +3,6 @@ from .service_repository import ServiceRepository
 from .appointment_repository import AppointmentRepository
 from .user_repository import UserRepository
 from .user_session_repository import UserSessionRepository
+from .gallery_repository import GalleryRepository
 
-__all__ = ["ClientRepository", "ServiceRepository", "AppointmentRepository", "UserRepository", "UserSessionRepository"]
+__all__ = ["ClientRepository", "ServiceRepository", "AppointmentRepository", "UserRepository", "UserSessionRepository", "GalleryRepository"]

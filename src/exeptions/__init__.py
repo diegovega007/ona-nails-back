@@ -4,7 +4,9 @@ from .client_exeption import ClientAlreadyExists
 from .user_exeption import UserNotFound, UserAlreadyExists, UserInactive
 from .auth_exeption import InvalidCredentialsException, TokenExpiredException
 from .user_session_exeption import UserSessionNotFound, UserSessionRevoked
+from .cloudinary_exeption import CloudinaryException
+from .gallery_exeption import GalleryNotFound
 
 __all__ = ["ServiceNotFound", "ServiceAlreadyExists", "AppointmentNotFound", "AppointmentAlreadyExists", "AppointmentDateNotAvailable", 
 "ClientAlreadyExists", "AppointmentClientNotFound", "UserNotFound", "UserAlreadyExists", "UserInactive", "InvalidCredentialsException", 
-"TokenExpiredException", "UserSessionNotFound", "UserSessionRevoked"]
+"TokenExpiredException", "UserSessionNotFound", "UserSessionRevoked", "CloudinaryException", "GalleryNotFound"]

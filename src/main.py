@@ -3,7 +3,7 @@ from .config import API_VERSION, create_db_and_tables
 from .utils.error_handler_middleware import ErrorHandlerMiddleware
 
 #Registro de modelos
-from .models import Service, Client, Appointment, User, UserSession
+from .models import Service, Client, Appointment, User, UserSession, Gallery, GallerySetting
 
 #Rutas
 from .routes.service_route import router as service_router
@@ -12,6 +12,7 @@ from .routes.user_route import router as user_router
 from .routes.login_route import router as login_router
 from .routes.login_route import router_logout as login_router_logout
 from .routes.login_route import router_refresh as login_router_refresh
+from .routes.gallery_route import router as gallery_router
 
 app = FastAPI(
     title="OnaNails API",
@@ -30,3 +31,4 @@ app.include_router(login_router_refresh, prefix=f"/{API_VERSION}")
 app.include_router(user_router, prefix=f"/{API_VERSION}")
 app.include_router(service_router, prefix=f"/{API_VERSION}")
 app.include_router(appointment_router, prefix=f"/{API_VERSION}")
+app.include_router(gallery_router, prefix=f"/{API_VERSION}")
