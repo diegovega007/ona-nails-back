@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status
 
-from ..services import GalleryService, CloudinaryService
-from ..dtos import GalleryResponseDTO, CreateGalleryDTO, UpdateGalleryDTO
+from ..services import GalleryService, CloudinaryService, GallerySettingService
+from ..dtos import GalleryResponseDTO, CreateGalleryDTO, UpdateGalleryDTO, GallerySettingDTO
 from fastapi import UploadFile, File
-from ..repositories import GalleryRepository
+from ..repositories import GalleryRepository, GallerySettingRepository
 from ..config import get_session
 from ..utils.auth_dependency import authorization_header
 from sqlmodel import Session
@@ -11,7 +11,18 @@ from sqlmodel import Session
 def get_gallery_service(session: Session = Depends(get_session)) -> GalleryService:
     return GalleryService(GalleryRepository(session), CloudinaryService())
 
+def get_gallery_setting_service(session: Session = Depends(get_session)) -> GallerySettingService:
+    return GallerySettingService(GallerySettingRepository(session))
+
 router = APIRouter(prefix="/galleries", tags=["Galleries"])
+
+@router.get("/settings", response_model=GallerySettingDTO, status_code=status.HTTP_200_OK)
+def get_gallery_setting(gallery_setting_service: GallerySettingService = Depends(get_gallery_setting_service), auth: dict = Depends(authorization_header)):
+    return gallery_setting_service.get_gallery_setting()
+
+@router.put("/settings", response_model=GallerySettingDTO, status_code=status.HTTP_200_OK)
+def update_gallery_setting(gallery_setting_dto: GallerySettingDTO = Depends(GallerySettingDTO), gallery_setting_service: GallerySettingService = Depends(get_gallery_setting_service), auth: dict = Depends(authorization_header)):
+    return gallery_setting_service.update_gallery_setting(gallery_setting_dto)
 
 @router.post("/", response_model=GalleryResponseDTO, status_code=status.HTTP_201_CREATED)
 def create_gallery(
