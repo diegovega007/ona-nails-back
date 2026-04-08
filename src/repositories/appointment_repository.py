@@ -1,3 +1,4 @@
+from sqlalchemy import Date, cast
 from .base_repository import BaseRepository
 from ..models import Appointment, Client, AppointmentStatus
 from sqlmodel import Session, select
@@ -15,9 +16,9 @@ class AppointmentRepository(BaseRepository):
             .options(selectinload(Appointment.client), selectinload(Appointment.service))
         )
         if cellphone:
-            statement = statement.where(Client.cellphone == cellphone)
+            statement = statement.where(Client.cellphone.contains(cellphone))
         if status:
             statement = statement.where(Appointment.status == status)
         if date:
-            statement = statement.where(Appointment.appointment_date == date)
+            statement = statement.where(cast(Appointment.appointment_date, Date) == date.date())
         return self.session.exec(statement).all()

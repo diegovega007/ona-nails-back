@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 
-from ..services import AppointmentService, ClientService, ServiceService
+from ..services import AppointmentService, ClientService, ServiceService, CloudinaryService
 from ..dtos import CreateAppointmentDTO, UpdateAppointmentDTO, AppointmentResponseDTO
 from ..repositories import AppointmentRepository, ClientRepository, ServiceRepository
 from ..config import get_session
@@ -11,8 +11,8 @@ from datetime import datetime
 
 def get_appointment_service(session: Session = Depends(get_session)) -> AppointmentService:
     return AppointmentService(
-        appointment_repository=AppointmentRepository(session), 
-        service_service=ServiceService(ServiceRepository(session)),
+        appointment_repository=AppointmentRepository(session),
+        service_service=ServiceService(ServiceRepository(session), CloudinaryService()),
         client_service=ClientService(ClientRepository(session))
     )
 

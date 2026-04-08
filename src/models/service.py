@@ -6,7 +6,8 @@ class Service(BaseModel, table=True):
 
     name: str = Field(nullable=False, max_length=255)
     description: str = Field(nullable=True, max_length=255)
-    photo: str = Field(nullable=True, max_length=255)
+    photo: str = Field(nullable=True, max_length=500)
+    photo_public_id: str = Field(nullable=True, max_length=255)
     price: float = Field(nullable=False)
     enabled: bool = Field(nullable=False, default=True)
     created_by: str = Field(nullable=False, max_length=150)

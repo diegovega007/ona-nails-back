@@ -1,4 +1,3 @@
-from token import OP
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
@@ -6,7 +5,6 @@ from datetime import datetime
 class CreateServiceDTO(BaseModel):
     name: str
     description: Optional[str] = None
-    photo: Optional[str] = None
     price: float
     enabled: bool = True
 
@@ -15,7 +13,6 @@ class CreateServiceDTO(BaseModel):
             "example": {
                 "name": "Service 1",
                 "description": "Description of service 1",
-                "photo": "https://example.com/photo.jpg",
                 "price": 100.0,
                 "enabled": True
             }
@@ -25,7 +22,6 @@ class UpdateServiceDTO(BaseModel):
     id: int
     name: str
     description: Optional[str] = None
-    photo: Optional[str] = None
     price: float
     enabled: bool = True
 
@@ -35,7 +31,6 @@ class UpdateServiceDTO(BaseModel):
                 "id": 1,
                 "name": "Service 1",
                 "description": "Description of service 1",
-                "photo": "https://example.com/photo.jpg",
                 "price": 100.0,
                 "enabled": True
             }
@@ -46,6 +41,7 @@ class ServiceResponseDTO(BaseModel):
     name: str
     description: Optional[str] = None
     photo: Optional[str] = None
+    photo_public_id: Optional[str] = None
     price: float
     enabled: bool
     created_at: datetime
@@ -60,11 +56,12 @@ class ServiceResponseDTO(BaseModel):
                 "id": 1,
                 "name": "Service 1",
                 "description": "Description of service 1",
-                "photo": "https://example.com/photo.jpg",
+                "photo": "https://res.cloudinary.com/example/image/upload/v1/service.jpg",
+                "photo_public_id": "service_1",
                 "price": 100.0,
                 "enabled": True,
-                "created_by": "John Doe",
-                "modified_by": "Jane Doe",
+                "created_by": "system",
+                "modified_by": "system",
                 "created_at": "2021-01-01T00:00:00Z",
                 "modified_at": "2021-01-01T00:00:00Z"
             }

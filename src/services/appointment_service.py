@@ -21,7 +21,7 @@ class AppointmentService:
         if self.appointment_repository.get_all(date=appointment_dto.appointment_date):
             raise AppointmentDateNotAvailable()
         appointment = self.appointment_repository.create(
-            Appointment(**appointment_dto.model_dump(), client_id=client.id, created_at=datetime.now())
+            Appointment(**appointment_dto.model_dump(exclude={"client"}), client_id=client.id, created_at=datetime.now())
         )
 
         return AppointmentResponseDTO.model_validate(
