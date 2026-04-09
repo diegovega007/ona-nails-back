@@ -53,7 +53,8 @@ class LoginService:
         self.user_session_repository.create(
             UserSession(**user_session_dto.model_dump(), created_at=datetime.now())
         )
-        
+        user.last_login = datetime.now()
+        self.user_repository.update(user)
         return LoginResponseDTO(
             token=token,
             refresh_token=refresh_token,

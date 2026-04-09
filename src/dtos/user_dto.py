@@ -58,6 +58,7 @@ class UserResponseDTO(BaseModel):
     last_login: Optional[datetime] = None
     created_at: datetime
     modified_at: Optional[datetime] = None
+    last_login: Optional[datetime] = None
 
     class Config:
         from_attributes = True
@@ -72,7 +73,8 @@ class UserResponseDTO(BaseModel):
                 "is_active": True,
                 "last_login": "2021-01-01T00:00:00Z",
                 "created_at": "2021-01-01T00:00:00Z",
-                "modified_at": "2021-01-01T00:00:00Z"
+                "modified_at": "2021-01-01T00:00:00Z",
+                "last_login": "2021-01-01T00:00:00Z"
             }
         }
 
