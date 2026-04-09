@@ -49,8 +49,6 @@ class AppointmentService:
 
     def get_all_appointments(self, cellphone: str = None, status: AppointmentStatus = None, date: datetime = None) -> list[AppointmentResponseDTO]:
         appointments = self.appointment_repository.get_all(cellphone=cellphone, status=status, date=date)
-        if not appointments:
-            raise AppointmentClientNotFound()
         
         return [AppointmentResponseDTO.model_validate(appointment) for appointment in appointments]
 
