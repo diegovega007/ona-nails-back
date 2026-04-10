@@ -26,7 +26,7 @@ class CreateUserDTO(BaseModel):
 class UpdateUserDTO(BaseModel):
     id: int
     email: str
-    password: str
+    password: Optional[str] = None
     first_name: str
     last_name: str
     cellphone: Optional[str] = None

@@ -32,8 +32,10 @@ class UserService:
         user = self.user_repository.get_by_id(user_dto.id)
         if not user:
             raise UserNotFound()
+        password = self.auth_service.hash_password(user_dto.password) if user_dto.password else user.password
+        user.modified_at = datetime.now()
         user = self.user_repository.update(
-            User(**user_dto.model_dump(exclude={"password"}), password=self.auth_service.hash_password(user_dto.password), modified_at=datetime.now())
+            User(**user_dto.model_dump(exclude={"password"}), password=password, modified_at=datetime.now())
         )
         return UserResponseDTO.model_validate(user)
 
