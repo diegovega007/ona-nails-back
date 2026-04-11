@@ -17,7 +17,7 @@ def create_service(service_dto: CreateServiceDTO, service_service: ServiceServic
     return service_service.create_service(service_dto)
 
 @router.get("/", response_model=list[ServiceResponseDTO], status_code=status.HTTP_200_OK)
-def get_all_services(service_service: ServiceService = Depends(get_service_service), auth: dict = Depends(authorization_header)):
+def get_all_services(service_service: ServiceService = Depends(get_service_service)):
     return service_service.get_all_services()
 
 @router.get("/{id}", response_model=ServiceResponseDTO, status_code=status.HTTP_200_OK)
