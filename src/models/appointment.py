@@ -2,9 +2,12 @@ from .base_model import BaseModel
 from sqlmodel import Field, Relationship
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
+
 from .client import Client
-from .service import Service
+
+if TYPE_CHECKING:
+    from .appointment_service import AppointmentService
 
 class AppointmentStatus(str, Enum):
     IN_PROGRESS = "in_progress"
@@ -21,5 +24,7 @@ class Appointment(BaseModel, table=True):
     status: AppointmentStatus = Field(default=AppointmentStatus.RECEIVED)
 
     client: Optional["Client"] = Relationship()
-
+    appointment_services: list["AppointmentService"] = Relationship(
+        back_populates="appointment"
+    )
 
