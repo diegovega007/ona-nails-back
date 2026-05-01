@@ -2,7 +2,7 @@ from ..repositories import AppointmentRepository
 from .service_service import ServiceService
 from .client_service import ClientService
 from ..dtos import CreateAppointmentDTO, UpdateAppointmentDTO, AppointmentResponseDTO
-from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists, AppointmentDateNotAvailable, AppointmentClientNotFound
+from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists, AppointmentDateNotAvailable
 from datetime import datetime
 from ..models import Appointment, AppointmentStatus
 

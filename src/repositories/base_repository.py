@@ -11,6 +11,13 @@ class BaseRepository:
         self.session.refresh(data)
         return data
 
+    def create_many(self, data: list[SQLModel]) -> list[SQLModel]:
+        self.session.add_all(data)
+        self.session.commit()
+        for item in data:
+            self.session.refresh(item)
+        return [item for item in data]
+
     def get_by_id(self, id: int) -> SQLModel:
         return self.session.get(self.model, id)
 

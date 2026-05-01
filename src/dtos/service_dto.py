@@ -6,6 +6,7 @@ class CreateServiceDTO(BaseModel):
     name: str
     description: Optional[str] = None
     price: float
+    duration: int
     enabled: bool = True
 
     class Config:
@@ -14,6 +15,7 @@ class CreateServiceDTO(BaseModel):
                 "name": "Service 1",
                 "description": "Description of service 1",
                 "price": 100.0,
+                "duration": 60,
                 "enabled": True
             }
         }
@@ -23,6 +25,7 @@ class UpdateServiceDTO(BaseModel):
     name: str
     description: Optional[str] = None
     price: float
+    duration: int
     enabled: bool = True
 
     class Config:
@@ -32,6 +35,7 @@ class UpdateServiceDTO(BaseModel):
                 "name": "Service 1",
                 "description": "Description of service 1",
                 "price": 100.0,
+                "duration": 60,
                 "enabled": True
             }
         }
@@ -43,6 +47,7 @@ class ServiceResponseDTO(BaseModel):
     photo: Optional[str] = None
     photo_public_id: Optional[str] = None
     price: float
+    duration: int
     enabled: bool
     created_at: datetime
     created_by: str
@@ -59,6 +64,7 @@ class ServiceResponseDTO(BaseModel):
                 "photo": "https://res.cloudinary.com/example/image/upload/v1/service.jpg",
                 "photo_public_id": "service_1",
                 "price": 100.0,
+                "duration": 60,
                 "enabled": True,
                 "created_by": "system",
                 "modified_by": "system",

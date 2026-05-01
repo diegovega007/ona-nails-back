@@ -13,6 +13,7 @@ from .routes.login_route import router as login_router
 from .routes.login_route import router_logout as login_router_logout
 from .routes.login_route import router_refresh as login_router_refresh
 from .routes.gallery_route import router as gallery_router
+from .routes.appointment_service_route import router as appointment_service_router
 
 app = FastAPI(
     title="OnaNails API",
@@ -32,3 +33,4 @@ app.include_router(user_router, prefix=f"/{API_VERSION}")
 app.include_router(service_router, prefix=f"/{API_VERSION}")
 app.include_router(appointment_router, prefix=f"/{API_VERSION}")
 app.include_router(gallery_router, prefix=f"/{API_VERSION}")
+app.include_router(appointment_service_router, prefix=f"/{API_VERSION}")

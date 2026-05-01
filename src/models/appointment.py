@@ -15,14 +15,11 @@ class AppointmentStatus(str, Enum):
 class Appointment(BaseModel, table=True):
     __tablename__ = "appointments"
 
-    service_id: int = Field(nullable=False, foreign_key="services.id")
     client_id: int = Field(nullable=True, foreign_key="clients.id")
     appointment_date: datetime = Field(nullable=False)
-    appintment_duration: int = Field(nullable=True)
     detail_service: str = Field(nullable=True, max_length=500)
     status: AppointmentStatus = Field(default=AppointmentStatus.RECEIVED)
 
     client: Optional["Client"] = Relationship()
-    service: Optional["Service"] = Relationship()
 
 

@@ -12,3 +12,4 @@ class Service(BaseModel, table=True):
     enabled: bool = Field(nullable=False, default=True)
     created_by: str = Field(nullable=False, max_length=150)
     modified_by: str = Field(nullable=True, max_length=150)
+    duration: int = Field(nullable=False)

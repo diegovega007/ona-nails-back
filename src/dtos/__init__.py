@@ -6,6 +6,7 @@ from .login_dto import LoginRequestDTO, LoginResponseDTO, RefreshSessionRequestD
 from .user_session_dto import CreateUserSessionDTO
 from .gallery_dto import CreateGalleryDTO, UpdateGalleryDTO, GalleryResponseDTO
 from .settings_dto import GallerySettingDTO
+from .appointment_service_dto import CreateAppointmentServiceDTO, UpdateAppointmentServiceDTO, AppointmentServiceResponseDTO
 
 
-__all__ = ["CreateClientDTO", "UpdateClientDTO", "ClientResponseDTO", "CreateServiceDTO", "UpdateServiceDTO", "ServiceResponseDTO", "CreateAppointmentDTO", "UpdateAppointmentDTO", "AppointmentResponseDTO", "CreateUserDTO", "UpdateUserDTO", "UserResponseDTO", "LoginRequestDTO", "LoginResponseDTO", "CreateUserSessionDTO", "RefreshSessionRequestDTO", "CreateGalleryDTO", "UpdateGalleryDTO", "GalleryResponseDTO", "GallerySettingDTO"]
+__all__ = ["CreateClientDTO", "UpdateClientDTO", "ClientResponseDTO", "CreateServiceDTO", "UpdateServiceDTO", "ServiceResponseDTO", "CreateAppointmentDTO", "UpdateAppointmentDTO", "AppointmentResponseDTO", "CreateUserDTO", "UpdateUserDTO", "UserResponseDTO", "LoginRequestDTO", "LoginResponseDTO", "CreateUserSessionDTO", "RefreshSessionRequestDTO", "CreateGalleryDTO", "UpdateGalleryDTO", "GalleryResponseDTO", "GallerySettingDTO", "CreateAppointmentServiceDTO", "UpdateAppointmentServiceDTO", "AppointmentServiceResponseDTO"]

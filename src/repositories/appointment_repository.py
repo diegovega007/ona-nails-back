@@ -13,7 +13,7 @@ class AppointmentRepository(BaseRepository):
         statement = (
             select(Appointment)
             .join(Client)
-            .options(selectinload(Appointment.client), selectinload(Appointment.service))
+            .options(selectinload(Appointment.client))
         )
         if cellphone:
             statement = statement.where(Client.cellphone.contains(cellphone))
