@@ -1,5 +1,6 @@
-from .client_dto import CreateClientDTO, UpdateClientDTO, ClientResponseDTO
+from .client_dto import CreateClientDTO, UpdateClientDTO, ClientResponseDTO, ClientAppointmentsResponseDTO
 from .service_dto import CreateServiceDTO, UpdateServiceDTO, ServiceResponseDTO
+from .appointment_services_response_dto import AppointmentServicesResponseDTO
 from .appointment_dto import CreateAppointmentDTO, UpdateAppointmentDTO, AppointmentResponseDTO
 from .user_dto import CreateUserDTO, UpdateUserDTO, UserResponseDTO
 from .login_dto import LoginRequestDTO, LoginResponseDTO, RefreshSessionRequestDTO
@@ -9,4 +10,4 @@ from .settings_dto import GallerySettingDTO
 from .appointment_service_dto import CreateAppointmentServiceDTO, UpdateAppointmentServiceDTO, AppointmentServiceResponseDTO
 
 
-__all__ = ["CreateClientDTO", "UpdateClientDTO", "ClientResponseDTO", "CreateServiceDTO", "UpdateServiceDTO", "ServiceResponseDTO", "CreateAppointmentDTO", "UpdateAppointmentDTO", "AppointmentResponseDTO", "CreateUserDTO", "UpdateUserDTO", "UserResponseDTO", "LoginRequestDTO", "LoginResponseDTO", "CreateUserSessionDTO", "RefreshSessionRequestDTO", "CreateGalleryDTO", "UpdateGalleryDTO", "GalleryResponseDTO", "GallerySettingDTO", "CreateAppointmentServiceDTO", "UpdateAppointmentServiceDTO", "AppointmentServiceResponseDTO"]
+__all__ = ["CreateClientDTO", "UpdateClientDTO", "ClientResponseDTO", "ClientAppointmentsResponseDTO", "CreateServiceDTO", "UpdateServiceDTO", "ServiceResponseDTO", "CreateAppointmentDTO", "UpdateAppointmentDTO", "AppointmentResponseDTO", "AppointmentServicesResponseDTO", "CreateUserDTO", "UpdateUserDTO", "UserResponseDTO", "LoginRequestDTO", "LoginResponseDTO", "CreateUserSessionDTO", "RefreshSessionRequestDTO", "CreateGalleryDTO", "UpdateGalleryDTO", "GalleryResponseDTO", "GallerySettingDTO", "CreateAppointmentServiceDTO", "UpdateAppointmentServiceDTO", "AppointmentServiceResponseDTO"]

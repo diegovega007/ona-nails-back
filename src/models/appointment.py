@@ -23,7 +23,7 @@ class Appointment(BaseModel, table=True):
     detail_service: str = Field(nullable=True, max_length=500)
     status: AppointmentStatus = Field(default=AppointmentStatus.RECEIVED)
 
-    client: Optional["Client"] = Relationship()
+    client: Optional["Client"] = Relationship(back_populates="appointments")
     appointment_services: list["AppointmentService"] = Relationship(
         back_populates="appointment"
     )
