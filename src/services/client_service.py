@@ -1,8 +1,8 @@
 from ..repositories import ClientRepository
-from ..dtos import CreateClientDTO, ClientResponseDTO, ClientAppointmentsResponseDTO, AppointmentServicesResponseDTO, ServiceResponseDTO
+from ..dtos import CreateClientDTO, ClientResponseDTO, ClientAppointmentsResponseDTO, AppointmentServicesResponseDTO, ServiceResponseDTO, UpdateClientDTO
 from ..models import Client
 from datetime import datetime
-
+from ..exeptions import ClientNotFound
 class ClientService:
     def __init__(self, client_repository: ClientRepository):
         self.client_repository = client_repository
@@ -34,6 +34,9 @@ class ClientService:
                         "detail_service": appointment.detail_service,
                         "list_services": list_services,
                         "status": appointment.status,
+                        "promotion": appointment.promotion,
+                        "subtotal": appointment.subtotal,
+                        "total": appointment.total,
                         "created_at": appointment.created_at,
                         "modified_at": appointment.modified_at,
                     }
@@ -45,9 +48,19 @@ class ClientService:
                     "last_name": client.last_name,
                     "cellphone": client.cellphone,
                     "email": client.email,
+                    "loyalty_completed": client.loyalty_completed,
                     "created_at": client.created_at,
                     "modified_at": client.modified_at,
                     "appointments": appointments_response,
                 }
             ))
         return clients_response
+
+    def update_client(self, client_dto: UpdateClientDTO) -> ClientResponseDTO:
+        client = self.client_repository.get_by_id(client_dto.id)
+        if not client:
+            raise ClientNotFound()
+        client = self.client_repository.update(
+            Client(**client_dto.model_dump(), modified_at=datetime.now())
+        )
+        return ClientResponseDTO.model_validate(client)

@@ -15,5 +15,6 @@ class Client(BaseModel, table=True):
     last_name: str = Field(nullable=False, max_length=255)
     cellphone: str = Field(nullable=False, max_length=20)
     email: str = Field(nullable=True, max_length=255)
+    loyalty_completed: int = Field(nullable=False, default=0)
 
     appointments: list["Appointment"] = Relationship(back_populates="client")

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
-from ..models import AppointmentStatus
+from ..models import AppointmentStatus, PromotionType
 from .client_dto import ClientResponseDTO, CreateClientDTO
 from .service_dto import ServiceResponseDTO
 class CreateAppointmentDTO(BaseModel):
@@ -11,6 +11,9 @@ class CreateAppointmentDTO(BaseModel):
     detail_service: Optional[str] = None
     list_services: Optional[list[int]] = None
     status: AppointmentStatus
+    promotion: Optional[PromotionType] = PromotionType.NO_PROMOTION
+    subtotal: Optional[float] = None
+    total: Optional[float] = None
 
 class UpdateAppointmentDTO(BaseModel):
     id: int
@@ -19,6 +22,10 @@ class UpdateAppointmentDTO(BaseModel):
     detail_service: Optional[str] = None
     list_services: Optional[list[int]] = None
     status: AppointmentStatus
+    promotion: Optional[PromotionType] = PromotionType.NO_PROMOTION
+    discount: Optional[float] = None
+    subtotal: Optional[float] = None
+    total: Optional[float] = None
 
 class AppointmentResponseDTO(BaseModel):
     id: int
@@ -27,6 +34,9 @@ class AppointmentResponseDTO(BaseModel):
     detail_service: Optional[str] = None
     list_services: Optional[list[ServiceResponseDTO]] = None
     status: AppointmentStatus
+    promotion: PromotionType
+    subtotal: float
+    total: float
     created_at: datetime
     modified_at: Optional[datetime] = None
 

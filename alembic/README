@@ -1,0 +1,8 @@
+Alembic migrations for Ona Nails.
+
+Ejecutar desde la raíz del repo (con `.env` y variables POSTGRES_* cargadas como en la app):
+
+  alembic revision --autogenerate -m "descripción"
+  alembic upgrade head
+
+La URL de la base es la misma que en `src/config.py` (`DATABASE_URL`).

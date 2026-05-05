@@ -2,10 +2,11 @@ from ..repositories import AppointmentRepository
 from .service_service import ServiceService
 from .client_service import ClientService
 from .appointment_service_service import AppointmentServiceService
-from ..dtos import CreateAppointmentDTO, UpdateAppointmentDTO, AppointmentResponseDTO, CreateAppointmentServiceDTO, UpdateAppointmentServiceDTO
+from ..dtos import CreateAppointmentDTO, UpdateAppointmentDTO, AppointmentResponseDTO, CreateAppointmentServiceDTO, UpdateAppointmentServiceDTO, UpdateClientDTO
 from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists, AppointmentDateNotAvailable
 from datetime import datetime
-from ..models import Appointment, AppointmentStatus
+from ..models import Appointment, AppointmentStatus, PromotionType
+from ..utils.promotions import get_promotion
 
 class AppointmentService:
     def __init__(self, appointment_repository: AppointmentRepository, service_service: ServiceService,
@@ -21,8 +22,17 @@ class AppointmentService:
             raise AppointmentAlreadyExists()
         if self.appointment_repository.get_all(date=appointment_dto.appointment_date):
             raise AppointmentDateNotAvailable()
+
+        subtotal = self._subtotal_from_service_ids(appointment_dto.list_services)
+        appointment_dto.subtotal = subtotal
+        appointment_dto.total = subtotal
+
         appointment = self.appointment_repository.create(
-            Appointment(**appointment_dto.model_dump(exclude={"client", "list_services"}), client_id=client.id, created_at=datetime.now())
+            Appointment(
+                **appointment_dto.model_dump(exclude={"client", "list_services"}),
+                client_id=client.id,
+                created_at=datetime.now(),
+            )
         )
         appointment_services = self.appointment_service_service.create_appointment_service(
             CreateAppointmentServiceDTO(
@@ -39,6 +49,9 @@ class AppointmentService:
                 "appointment_date": appointment.appointment_date,
                 "detail_service": appointment.detail_service,
                 "status": appointment.status,
+                "promotion": appointment.promotion,
+                "subtotal": appointment.subtotal,
+                "total": appointment.total,
                 "created_at": appointment.created_at,
                 "modified_at": appointment.modified_at,
                 "list_services": list_services,
@@ -49,13 +62,56 @@ class AppointmentService:
         appointment = self.appointment_repository.get_by_id(appointment_dto.id)
         if not appointment:
             raise AppointmentNotFound()
+
+        client = appointment.client
+        if client is None:
+            raise AppointmentNotFound()
+
+        was_done = appointment.status == AppointmentStatus.DONE
+        will_be_done = appointment_dto.status == AppointmentStatus.DONE
+        completing_now = not was_done and will_be_done
+
+        service_ids = appointment_dto.list_services
+        if service_ids is None:
+            service_ids = [link.service_id for link in appointment.appointment_services]
+
+        subtotal = self._subtotal_from_service_ids(service_ids)
+        appointment_dto.subtotal = subtotal
+        appointment_dto.total = subtotal
+
+        loyalty_updated = False
+        if completing_now:
+            if client.loyalty_completed == 5:
+                promotion = get_promotion(appointment_dto.promotion)
+                appointment_dto = promotion.apply(appointment_dto)
+                client.loyalty_completed = 1
+            else:
+                client.loyalty_completed += 1
+            loyalty_updated = True
+
+
+        if loyalty_updated:
+            self.client_service.update_client(
+                UpdateClientDTO(
+                    id=client.id,
+                    name=client.name,
+                    last_name=client.last_name,
+                    cellphone=client.cellphone,
+                    email=client.email,
+                    loyalty_completed=client.loyalty_completed,
+                )
+            )
         appointment = self.appointment_repository.update(
-            Appointment(**appointment_dto.model_dump(), modified_by="system", modified_at=datetime.now())
+            Appointment(
+                **appointment_dto.model_dump(exclude={"list_services", "discount"}),
+                modified_at=datetime.now(),
+            )
         )
+        appointment = self.appointment_repository.get_by_id(appointment.id) or appointment
         appointment_services = self.appointment_service_service.update_appointment_service(
             UpdateAppointmentServiceDTO(
                 appointment_id=appointment.id,
-                service_ids=appointment_dto.list_services
+                service_ids=service_ids,
             )
         )
         list_services = [
@@ -97,8 +153,16 @@ class AppointmentService:
                 "detail_service": appointment.detail_service,
                 "list_services": list_services,
                 "status": appointment.status,
+                "promotion": appointment.promotion,
+                "subtotal": appointment.subtotal,
+                "total": appointment.total,
                 "created_at": appointment.created_at,
                 "modified_at": appointment.modified_at,
             }
         )
+
+    def _subtotal_from_service_ids(self, service_ids: list[int] | None) -> float:
+        if not service_ids:
+            return 0.0
+        return sum(self.service_service.get_service_by_id(sid).price for sid in service_ids)
 

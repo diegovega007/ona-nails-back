@@ -26,7 +26,7 @@ class UpdateClientDTO(BaseModel):
     last_name: str
     cellphone: str
     email: Optional[str] = None
-
+    loyalty_completed: int
     class Config:
         json_schema_extra = {
             "example": {
@@ -34,7 +34,8 @@ class UpdateClientDTO(BaseModel):
                 "name": "John",
                 "last_name": "Doe",
                 "cellphone": "+523178901234",
-                "email": "john.doe@example.com"
+                "email": "john.doe@example.com",
+                "loyalty_completed": 0
             }
         }
 
@@ -44,6 +45,7 @@ class ClientResponseDTO(BaseModel):
     last_name: str
     cellphone: str
     email: Optional[str] = None
+    loyalty_completed: int
     created_at: datetime
     modified_at: Optional[datetime] = None
 
@@ -67,6 +69,7 @@ class ClientAppointmentsResponseDTO(BaseModel):
     last_name: str
     cellphone: str
     email: Optional[str] = None
+    loyalty_completed: int
     created_at: datetime
     modified_at: Optional[datetime] = None
     appointments: Optional[list[AppointmentServicesResponseDTO]] = None
@@ -80,6 +83,7 @@ class ClientAppointmentsResponseDTO(BaseModel):
                 "last_name": "Doe",
                 "cellphone": "+523178901234",
                 "email": "john.doe@example.com",
+                "loyalty_completed": 0,
                 "created_at": "2021-01-01T00:00:00Z",
                 "modified_at": "2021-01-01T00:00:00Z",
                 "appointments": [

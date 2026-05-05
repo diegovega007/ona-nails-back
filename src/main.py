@@ -3,7 +3,7 @@ from .config import API_VERSION, create_db_and_tables
 from .utils.error_handler_middleware import ErrorHandlerMiddleware
 
 #Registro de modelos
-from .models import Service, Client, Appointment, User, UserSession, Gallery, GallerySetting
+from .models import Service, Client, Appointment, User, UserSession, Gallery, GallerySetting, AppointmentService
 
 #Rutas
 from .routes.service_route import router as service_router

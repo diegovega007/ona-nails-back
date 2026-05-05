@@ -3,7 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from ..models import AppointmentStatus
+from ..models import AppointmentStatus, PromotionType
 from .service_dto import ServiceResponseDTO
 
 
@@ -13,5 +13,8 @@ class AppointmentServicesResponseDTO(BaseModel):
     detail_service: Optional[str] = None
     list_services: Optional[list[ServiceResponseDTO]] = None
     status: AppointmentStatus
+    promotion: PromotionType
+    subtotal: float
+    total: float
     created_at: datetime
     modified_at: Optional[datetime] = None
