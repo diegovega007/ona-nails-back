@@ -16,5 +16,6 @@ class AppointmentServicesResponseDTO(BaseModel):
     promotion: PromotionType
     subtotal: float
     total: float
+    duration: int
     created_at: datetime
     modified_at: Optional[datetime] = None
