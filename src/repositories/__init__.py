@@ -6,5 +6,7 @@ from .user_session_repository import UserSessionRepository
 from .gallery_repository import GalleryRepository   
 from .gallery_setting_repository import GallerySettingRepository
 from .appointment_service_repository import AppointmentServiceRepository
+from .service_type_repository import ServiceTypeRepository
 
-__all__ = ["ClientRepository", "ServiceRepository", "AppointmentRepository", "UserRepository", "UserSessionRepository", "GalleryRepository", "GallerySettingRepository", "AppointmentServiceRepository"]
+__all__ = ["ClientRepository", "ServiceRepository", "AppointmentRepository", "UserRepository", "UserSessionRepository", 
+"GalleryRepository", "GallerySettingRepository", "AppointmentServiceRepository", "ServiceTypeRepository"]

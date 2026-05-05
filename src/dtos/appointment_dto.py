@@ -66,7 +66,16 @@ class AppointmentResponseDTO(BaseModel):
                         "created_by": "system",
                         "modified_by": "system",
                         "created_at": "2021-01-01T00:00:00Z",
-                        "modified_at": "2021-01-01T00:00:00Z"
+                        "modified_at": "2021-01-01T00:00:00Z",
+                        "service_type": {
+                            "id": 1,
+                            "name": "Service Type 1",
+                            "description": "Description of service type 1",
+                            "created_at": "2021-01-01T00:00:00Z",
+                            "created_by": "system",
+                            "modified_at": "2021-01-01T00:00:00Z",
+                            "modified_by": "system"
+                        }
                     }
                 ],
                 "appointment_date": "2021-01-01T00:00:00Z",
