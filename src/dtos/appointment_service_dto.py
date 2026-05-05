@@ -52,9 +52,9 @@ class AppointmentServiceResponseDTO(BaseModel):
                         "email": "john.doe@example.com"
                     },
                     "appointment_date": "2021-01-01T00:00:00Z",
-                    "appintment_duration": 60,
                     "detail_service": "Detail of service 1",
                     "status": "in_progress",
+                    "duration": 60,
                     "created_at": "2021-01-01T00:00:00Z",
                     "modified_at": "2021-01-01T00:00:00Z"
                 },

@@ -37,6 +37,7 @@ class AppointmentResponseDTO(BaseModel):
     promotion: PromotionType
     subtotal: float
     total: float
+    duration: int
     created_at: datetime
     modified_at: Optional[datetime] = None
 
@@ -71,6 +72,7 @@ class AppointmentResponseDTO(BaseModel):
                 "appointment_date": "2021-01-01T00:00:00Z",
                 "detail_service": "Detail of service 1",
                 "status": "in_progress",
+                "duration": 60,
                 "created_at": "2021-01-01T00:00:00Z",
                 "modified_at": "2021-01-01T00:00:00Z"
             }

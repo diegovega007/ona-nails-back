@@ -20,7 +20,10 @@ class AppointmentRepository(BaseRepository):
         self,
         cellphone: str = None,
         status: AppointmentStatus = None,
+        multiple_status: list[AppointmentStatus] = None,
         date: datetime = None,
+        initial_date: datetime = None,
+        final_date: datetime = None,
     ) -> list[Appointment]:
         statement = select(Appointment).options(*_APPOINTMENT_LOAD_OPTIONS)
         if cellphone:
@@ -29,9 +32,16 @@ class AppointmentRepository(BaseRepository):
             )
         if status:
             statement = statement.where(Appointment.status == status)
+        if multiple_status:
+            statement = statement.where(Appointment.status.in_(multiple_status))
         if date:
             statement = statement.where(
                 cast(Appointment.appointment_date, Date) == date.date()
+            )
+        if initial_date and final_date:
+            statement = statement.where(
+                (cast(Appointment.appointment_date, Date) >= initial_date.date())
+                & (cast(Appointment.appointment_date, Date) <= final_date.date())
             )
         return list(self.session.exec(statement).all())
 

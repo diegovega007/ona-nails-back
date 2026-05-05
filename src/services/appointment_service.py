@@ -2,10 +2,10 @@ from ..repositories import AppointmentRepository
 from .service_service import ServiceService
 from .client_service import ClientService
 from .appointment_service_service import AppointmentServiceService
-from ..dtos import CreateAppointmentDTO, UpdateAppointmentDTO, AppointmentResponseDTO, CreateAppointmentServiceDTO, UpdateAppointmentServiceDTO, UpdateClientDTO
-from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists, AppointmentDateNotAvailable
+from ..dtos import CreateAppointmentDTO, UpdateAppointmentDTO, AppointmentResponseDTO, CreateAppointmentServiceDTO, UpdateAppointmentServiceDTO, UpdateClientDTO, ServiceResponseDTO
+from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists
 from datetime import datetime
-from ..models import Appointment, AppointmentStatus, PromotionType
+from ..models import Appointment, AppointmentStatus
 from ..utils.promotions import get_promotion
 
 class AppointmentService:
@@ -20,8 +20,6 @@ class AppointmentService:
         client = self.client_service.create(appointment_dto.client)
         if self.appointment_repository.get_all(cellphone=client.cellphone, status=AppointmentStatus.RECEIVED):
             raise AppointmentAlreadyExists()
-        if self.appointment_repository.get_all(date=appointment_dto.appointment_date):
-            raise AppointmentDateNotAvailable()
 
         subtotal = self._subtotal_from_service_ids(appointment_dto.list_services)
         appointment_dto.subtotal = subtotal
@@ -52,6 +50,7 @@ class AppointmentService:
                 "promotion": appointment.promotion,
                 "subtotal": appointment.subtotal,
                 "total": appointment.total,
+                "duration": self._duration_from_services(appointment_dto.list_services),
                 "created_at": appointment.created_at,
                 "modified_at": appointment.modified_at,
                 "list_services": list_services,
@@ -121,8 +120,8 @@ class AppointmentService:
         ]
         return self._appointment_to_response(appointment, list_services=list_services)
 
-    def get_all_appointments(self, cellphone: str = None, status: AppointmentStatus = None, date: datetime = None) -> list[AppointmentResponseDTO]:
-        appointments = self.appointment_repository.get_all(cellphone=cellphone, status=status, date=date)
+    def get_all_appointments(self, cellphone: str = None, status: AppointmentStatus = None, multiple_status: list[AppointmentStatus] = None, date: datetime = None, initial_date: datetime = None, final_date: datetime = None) -> list[AppointmentResponseDTO]:
+        appointments = self.appointment_repository.get_all(cellphone=cellphone, status=status, multiple_status=multiple_status, date=date, initial_date=initial_date, final_date=final_date)
 
         return [self._appointment_to_response(a) for a in appointments]
 
@@ -156,6 +155,7 @@ class AppointmentService:
                 "promotion": appointment.promotion,
                 "subtotal": appointment.subtotal,
                 "total": appointment.total,
+                "duration": self._duration_from_services(list_services),
                 "created_at": appointment.created_at,
                 "modified_at": appointment.modified_at,
             }
@@ -165,4 +165,9 @@ class AppointmentService:
         if not service_ids:
             return 0.0
         return sum(self.service_service.get_service_by_id(sid).price for sid in service_ids)
+
+    def _duration_from_services(self, services: list[ServiceResponseDTO] | None) -> int:
+        if not services:
+            return 0
+        return sum(service.duration for service in services)
 

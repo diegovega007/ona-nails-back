@@ -8,5 +8,6 @@ from .cloudinary_service import CloudinaryService
 from .gallery_service import GalleryService
 from .gallery_setting_service import GallerySettingService
 from .appointment_service_service import AppointmentServiceService
+from .agenda_service import AgendaService
 
-__all__ = ["ServiceService", "AppointmentService", "ClientService", "UserService", "AuthService", "LoginService", "GalleryService", "CloudinaryService", "GallerySettingService", "AppointmentServiceService"]
+__all__ = ["ServiceService", "AppointmentService", "ClientService", "UserService", "AuthService", "LoginService", "GalleryService", "CloudinaryService", "GallerySettingService", "AppointmentServiceService", "AgendaService"]

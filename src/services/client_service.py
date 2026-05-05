@@ -37,6 +37,7 @@ class ClientService:
                         "promotion": appointment.promotion,
                         "subtotal": appointment.subtotal,
                         "total": appointment.total,
+                        "duration": self._duration_from_services(list_services),
                         "created_at": appointment.created_at,
                         "modified_at": appointment.modified_at,
                     }
@@ -64,3 +65,8 @@ class ClientService:
             Client(**client_dto.model_dump(), modified_at=datetime.now())
         )
         return ClientResponseDTO.model_validate(client)
+
+    def _duration_from_services(self, services: list[ServiceResponseDTO] | None) -> int:
+        if not services:
+            return 0
+        return sum(service.duration for service in services)

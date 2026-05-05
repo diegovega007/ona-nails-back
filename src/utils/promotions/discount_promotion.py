@@ -4,8 +4,6 @@ from ...models import PromotionType
 from ...exeptions import PromotionDiscountRateNotSet
 
 class DiscountPromotion(Promotion):
-    """Expects `subtotal` set from service prices; `discount` is a rate in (0, 1], e.g. 0.1 = 10%."""
-
     def apply(self, appointment: UpdateAppointmentDTO) -> UpdateAppointmentDTO:
         if appointment.subtotal is None:
             return appointment
