@@ -1,6 +1,3 @@
-from sqlalchemy import Column
-from sqlalchemy.dialects.postgresql import ENUM as PG_ENUM
-
 from .base_model import BaseModel
 from sqlmodel import Field, Relationship
 from datetime import datetime
@@ -24,14 +21,6 @@ class PromotionType(str, Enum):
     NO_PROMOTION = "no_promotion"
 
 
-_promotion_pg = PG_ENUM(
-    PromotionType,
-    name="promotiontype",
-    create_type=False,
-    values_callable=lambda objs: [e.value for e in objs],
-)
-
-
 class Appointment(BaseModel, table=True):
     __tablename__ = "appointments"
 
@@ -39,15 +28,11 @@ class Appointment(BaseModel, table=True):
     appointment_date: datetime = Field(nullable=False)
     detail_service: str = Field(nullable=True, max_length=500)
     status: AppointmentStatus = Field(default=AppointmentStatus.RECEIVED)
-    promotion: PromotionType = Field(
-        default=PromotionType.NO_PROMOTION,
-        sa_column=Column(_promotion_pg, nullable=False),
-    )
+    promotion: PromotionType = Field(default=PromotionType.NO_PROMOTION)
     subtotal : float = Field(nullable=False)
     total : float = Field(nullable=False)
-    
+
     client: Optional["Client"] = Relationship(back_populates="appointments")
     appointment_services: list["AppointmentService"] = Relationship(
         back_populates="appointment"
     )
-

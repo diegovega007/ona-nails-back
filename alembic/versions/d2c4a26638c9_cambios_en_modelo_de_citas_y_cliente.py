@@ -11,6 +11,7 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
+# Mismos strings que PromotionType.value (como AppointmentStatus + Field simple en SQLModel).
 PROMOTION_VALUES = ("discount", "service_free", "no_promotion")
 
 
