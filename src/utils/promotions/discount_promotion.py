@@ -1,16 +1,24 @@
 from .promotion import Promotion
 from ...dtos import UpdateAppointmentDTO
-from ...models import PromotionType
-from ...exeptions import PromotionDiscountRateNotSet
+from ...exeptions import PromotionNotFound
+
+_DISCOUNT_RATES = {
+    "10_descuento": 0.1,
+    "15_descuento": 0.15,
+    "20_descuento": 0.2,
+    "25_descuento": 0.25,
+}
+
 
 class DiscountPromotion(Promotion):
+    def __init__(self, identifier: str):
+        self._identifier = identifier
+
     def apply(self, appointment: UpdateAppointmentDTO) -> UpdateAppointmentDTO:
-        if appointment.subtotal is None:
-            return appointment
+        rate = _DISCOUNT_RATES.get(self._identifier)
+        if rate is None:
+            raise PromotionNotFound()
         subtotal = appointment.subtotal
-        if appointment.discount is None:
-            raise PromotionDiscountRateNotSet()
         appointment.subtotal = subtotal
-        appointment.total = subtotal - (subtotal * appointment.discount)
-        appointment.promotion = PromotionType.DISCOUNT
+        appointment.total = subtotal - (subtotal * rate)
         return appointment

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from ..services import AgendaService, AppointmentService
-from ..repositories import AppointmentRepository, ServiceRepository, ClientRepository, AppointmentServiceRepository
+from ..repositories import AppointmentRepository, ServiceRepository, ClientRepository, AppointmentServiceRepository, PromotionRepository
 from ..config import get_session
 from sqlmodel import Session
 from ..services import ServiceService, CloudinaryService, ClientService, AppointmentServiceService
@@ -13,7 +13,8 @@ def get_agenda_service(session: Session = Depends(get_session)) -> AgendaService
             appointment_repository=AppointmentRepository(session),
             service_service=ServiceService(ServiceRepository(session), CloudinaryService()),
             client_service=ClientService(ClientRepository(session)),
-            appointment_service_service=AppointmentServiceService(AppointmentServiceRepository(session), ServiceService(ServiceRepository(session), CloudinaryService()))
+            appointment_service_service=AppointmentServiceService(AppointmentServiceRepository(session), ServiceService(ServiceRepository(session), CloudinaryService())),
+            promotion_repository=PromotionRepository(session),
         )
     )
 

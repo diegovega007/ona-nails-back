@@ -2,8 +2,9 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
 
-from ..models import AppointmentStatus, PromotionType
+from ..models import AppointmentStatus
 from .client_dto import ClientResponseDTO, CreateClientDTO
+from .promotion_dto import PromotionResponseDTO
 from .service_dto import ServiceResponseDTO
 class CreateAppointmentDTO(BaseModel):
     client: CreateClientDTO
@@ -11,7 +12,7 @@ class CreateAppointmentDTO(BaseModel):
     detail_service: Optional[str] = None
     list_services: Optional[list[int]] = None
     status: AppointmentStatus
-    promotion: Optional[PromotionType] = PromotionType.NO_PROMOTION
+    promotion_id: Optional[int] = None
     subtotal: Optional[float] = None
     total: Optional[float] = None
 
@@ -22,8 +23,7 @@ class UpdateAppointmentDTO(BaseModel):
     detail_service: Optional[str] = None
     list_services: Optional[list[int]] = None
     status: AppointmentStatus
-    promotion: Optional[PromotionType] = PromotionType.NO_PROMOTION
-    discount: Optional[float] = None
+    promotion_id: Optional[int] = None
     subtotal: Optional[float] = None
     total: Optional[float] = None
 
@@ -34,10 +34,11 @@ class AppointmentResponseDTO(BaseModel):
     detail_service: Optional[str] = None
     list_services: Optional[list[ServiceResponseDTO]] = None
     status: AppointmentStatus
-    promotion: PromotionType
+    promotion_id: Optional[int] = None
+    promotion: Optional[PromotionResponseDTO] = None
     subtotal: float
     total: float
-    duration: int
+    duration: Optional[int] = None
     created_at: datetime
     modified_at: Optional[datetime] = None
 
@@ -81,6 +82,19 @@ class AppointmentResponseDTO(BaseModel):
                 "appointment_date": "2021-01-01T00:00:00Z",
                 "detail_service": "Detail of service 1",
                 "status": "in_progress",
+                "promotion_id": 1,
+                "promotion": {
+                    "id": 1,
+                    "identifier": "PROMO123",
+                    "name": "Promotion 1",
+                    "description": "Description of promotion 1",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "created_by": "system",
+                    "modified_at": "2021-01-01T00:00:00Z",
+                    "modified_by": "system"
+                },
+                "subtotal": 100.0,
+                "total": 100.0,
                 "duration": 60,
                 "created_at": "2021-01-01T00:00:00Z",
                 "modified_at": "2021-01-01T00:00:00Z"

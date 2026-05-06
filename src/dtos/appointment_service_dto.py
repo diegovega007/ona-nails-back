@@ -54,9 +54,22 @@ class AppointmentServiceResponseDTO(BaseModel):
                     "appointment_date": "2021-01-01T00:00:00Z",
                     "detail_service": "Detail of service 1",
                     "status": "in_progress",
+                    "promotion_id": 1,
+                    "promotion": {
+                        "id": 1,
+                        "identifier": "PROMO123",
+                        "name": "Promotion 1",
+                        "description": "Description of promotion 1",
+                        "created_at": "2021-01-01T00:00:00Z",
+                        "created_by": "system",
+                        "modified_at": "2021-01-01T00:00:00Z",
+                        "modified_by": "system"
+                    },
+                    "subtotal": 100.0,
+                    "total": 100.0,
                     "duration": 60,
                     "created_at": "2021-01-01T00:00:00Z",
-                    "modified_at": "2021-01-01T00:00:00Z"
+                    "modified_at": "2021-01-01T00:00:00Z",
                 },
                 "service": {
                     "id": 1,

@@ -34,6 +34,7 @@ class ClientService:
                         "detail_service": appointment.detail_service,
                         "list_services": list_services,
                         "status": appointment.status,
+                        "promotion_id": appointment.promotion_id,
                         "promotion": appointment.promotion,
                         "subtotal": appointment.subtotal,
                         "total": appointment.total,

@@ -10,5 +10,6 @@ from .gallery_setting_service import GallerySettingService
 from .appointment_service_service import AppointmentServiceService
 from .agenda_service import AgendaService
 from .service_type_service import ServiceTypeService
+from .promotion_service import PromotionService
 
-__all__ = ["ServiceService", "AppointmentService", "ClientService", "UserService", "AuthService", "LoginService", "GalleryService", "CloudinaryService", "GallerySettingService", "AppointmentServiceService", "AgendaService", "ServiceTypeService"]
+__all__ = ["ServiceService", "AppointmentService", "ClientService", "UserService", "AuthService", "LoginService", "GalleryService", "CloudinaryService", "GallerySettingService", "AppointmentServiceService", "AgendaService", "ServiceTypeService", "PromotionService"]

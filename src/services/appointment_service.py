@@ -1,4 +1,4 @@
-from ..repositories import AppointmentRepository
+from ..repositories import AppointmentRepository, PromotionRepository
 from .service_service import ServiceService
 from .client_service import ClientService
 from .appointment_service_service import AppointmentServiceService
@@ -9,12 +9,19 @@ from ..models import Appointment, AppointmentStatus
 from ..utils.promotions import get_promotion
 
 class AppointmentService:
-    def __init__(self, appointment_repository: AppointmentRepository, service_service: ServiceService,
-    client_service: ClientService, appointment_service_service: AppointmentServiceService):
+    def __init__(
+        self,
+        appointment_repository: AppointmentRepository,
+        service_service: ServiceService,
+        client_service: ClientService,
+        appointment_service_service: AppointmentServiceService,
+        promotion_repository: PromotionRepository,
+    ):
         self.appointment_repository = appointment_repository
         self.client_service = client_service
         self.service_service = service_service
         self.appointment_service_service = appointment_service_service
+        self.promotion_repository = promotion_repository
 
     def create_appointment(self, appointment_dto: CreateAppointmentDTO) -> AppointmentResponseDTO:
         client = self.client_service.create(appointment_dto.client)
@@ -47,13 +54,14 @@ class AppointmentService:
                 "appointment_date": appointment.appointment_date,
                 "detail_service": appointment.detail_service,
                 "status": appointment.status,
-                "promotion": appointment.promotion,
+                "promotion_id": appointment.promotion_id,
                 "subtotal": appointment.subtotal,
                 "total": appointment.total,
-                "duration": self._duration_from_services(appointment_dto.list_services),
+                "duration": self._duration_from_services(list_services),
                 "created_at": appointment.created_at,
                 "modified_at": appointment.modified_at,
                 "list_services": list_services,
+                "promotion": appointment.promotion,
             }
         )
     
@@ -81,7 +89,9 @@ class AppointmentService:
         loyalty_updated = False
         if completing_now:
             if client.loyalty_completed == 5:
-                promotion = get_promotion(appointment_dto.promotion)
+                promotion = get_promotion(
+                    self.promotion_repository, appointment_dto.promotion_id
+                )
                 appointment_dto = promotion.apply(appointment_dto)
                 client.loyalty_completed = 1
             else:
@@ -152,12 +162,13 @@ class AppointmentService:
                 "detail_service": appointment.detail_service,
                 "list_services": list_services,
                 "status": appointment.status,
-                "promotion": appointment.promotion,
+                "promotion_id": appointment.promotion_id,
                 "subtotal": appointment.subtotal,
                 "total": appointment.total,
                 "duration": self._duration_from_services(list_services),
                 "created_at": appointment.created_at,
                 "modified_at": appointment.modified_at,
+                "promotion": appointment.promotion,
             }
         )
 
