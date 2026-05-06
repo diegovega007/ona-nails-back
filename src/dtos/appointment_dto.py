@@ -15,6 +15,7 @@ class CreateAppointmentDTO(BaseModel):
     promotion_id: Optional[int] = None
     subtotal: Optional[float] = None
     total: Optional[float] = None
+    duration: Optional[int] = None
 
 class UpdateAppointmentDTO(BaseModel):
     id: int
@@ -26,6 +27,7 @@ class UpdateAppointmentDTO(BaseModel):
     promotion_id: Optional[int] = None
     subtotal: Optional[float] = None
     total: Optional[float] = None
+    duration: Optional[int] = None
 
 class AppointmentResponseDTO(BaseModel):
     id: int

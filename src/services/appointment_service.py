@@ -31,6 +31,8 @@ class AppointmentService:
         subtotal = self._subtotal_from_service_ids(appointment_dto.list_services)
         appointment_dto.subtotal = subtotal
         appointment_dto.total = subtotal
+        if appointment_dto.duration is None:
+            appointment_dto.duration = self._duration_from_service_ids(appointment_dto.list_services)
 
         appointment = self.appointment_repository.create(
             Appointment(
@@ -85,6 +87,8 @@ class AppointmentService:
         subtotal = self._subtotal_from_service_ids(service_ids)
         appointment_dto.subtotal = subtotal
         appointment_dto.total = subtotal
+        if appointment_dto.duration is None:
+            appointment_dto.duration = self._duration_from_service_ids(service_ids)
 
         loyalty_updated = False
         if completing_now:
@@ -165,7 +169,7 @@ class AppointmentService:
                 "promotion_id": appointment.promotion_id,
                 "subtotal": appointment.subtotal,
                 "total": appointment.total,
-                "duration": self._duration_from_services(list_services),
+                "duration": appointment.duration or self._duration_from_services(list_services),
                 "created_at": appointment.created_at,
                 "modified_at": appointment.modified_at,
                 "promotion": appointment.promotion,
@@ -176,6 +180,11 @@ class AppointmentService:
         if not service_ids:
             return 0.0
         return sum(self.service_service.get_service_by_id(sid).price for sid in service_ids)
+
+    def _duration_from_service_ids(self, service_ids: list[int] | None) -> int:
+        if not service_ids:
+            return 0
+        return sum(self.service_service.get_service_by_id(sid).duration for sid in service_ids)
 
     def _duration_from_services(self, services: list[ServiceResponseDTO] | None) -> int:
         if not services:

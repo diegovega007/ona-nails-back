@@ -26,6 +26,7 @@ class Appointment(BaseModel, table=True):
     promotion_id: int = Field(nullable=True, foreign_key="promotions.id")
     subtotal : float = Field(nullable=False)
     total : float = Field(nullable=False)
+    duration: int = Field(nullable=False, default=0)
 
     client: Optional["Client"] = Relationship(back_populates="appointments")
     promotion: Optional["Promotion"] = Relationship()
