@@ -134,7 +134,8 @@ class AppointmentService:
         ]
         return self._appointment_to_response(appointment, list_services=list_services)
 
-    def get_all_appointments(self, cellphone: str = None, status: AppointmentStatus = None, multiple_status: list[AppointmentStatus] = None, date: datetime = None, initial_date: datetime = None, final_date: datetime = None) -> list[AppointmentResponseDTO]:
+    def get_all_appointments(self, cellphone: str = None, status: AppointmentStatus = None, multiple_status: list[AppointmentStatus] = None, 
+    date: datetime = None, initial_date: datetime = None, final_date: datetime = None) -> list[AppointmentResponseDTO]:
         appointments = self.appointment_repository.get_all(cellphone=cellphone, status=status, multiple_status=multiple_status, date=date, initial_date=initial_date, final_date=final_date)
 
         return [self._appointment_to_response(a) for a in appointments]

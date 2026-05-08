@@ -18,6 +18,7 @@ from .routes.client_route import router as client_router
 from .routes.agenda_route import router as agenda_router
 from .routes.service_type_route import router as service_type_router
 from .routes.promotion_route import router as promotion_router
+from .routes.instagram_media_route import router as instagram_media_router
 
 app = FastAPI(
     title="OnaNails API",
@@ -42,3 +43,4 @@ app.include_router(client_router, prefix=f"/{API_VERSION}")
 app.include_router(agenda_router, prefix=f"/{API_VERSION}")
 app.include_router(service_type_router, prefix=f"/{API_VERSION}")
 app.include_router(promotion_router, prefix=f"/{API_VERSION}")
+app.include_router(instagram_media_router, prefix=f"/{API_VERSION}")
