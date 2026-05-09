@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, status
 
 from ..services import UserService, AuthService
 from ..dtos import CreateUserDTO, UpdateUserDTO, UserResponseDTO
-from ..repositories import UserRepository
+from ..repositories import UserRepository, UserSessionRepository
 from ..config import get_session
 from ..utils.auth_dependency import authorization_header
 from sqlmodel import Session
 
 def get_user_service(session: Session = Depends(get_session)) -> UserService:
-    return UserService(UserRepository(session), AuthService())
+    return UserService(UserRepository(session), AuthService(), UserSessionRepository(session))
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

@@ -1,4 +1,4 @@
-from ..repositories import UserRepository
+from ..repositories import UserRepository, UserSessionRepository
 from ..services.auth_service import AuthService
 from ..dtos import CreateUserDTO, UpdateUserDTO, UserResponseDTO
 from ..exeptions import UserNotFound, UserAlreadyExists
@@ -6,9 +6,10 @@ from datetime import datetime
 from ..models import User
 
 class UserService:
-    def __init__(self, user_repository: UserRepository, auth_service: AuthService):
+    def __init__(self, user_repository: UserRepository, auth_service: AuthService, user_session_repository: UserSessionRepository):
         self.user_repository = user_repository
         self.auth_service = auth_service
+        self.user_session_repository = user_session_repository
 
     def create_user(self, user_dto: CreateUserDTO) -> UserResponseDTO:
         if self.user_repository.get_by_email(user_dto.email):
@@ -43,4 +44,7 @@ class UserService:
         user = self.user_repository.get_by_id(id)
         if not user:
             raise UserNotFound()
+        user_sessions = self.user_session_repository.get_all_by_user_id(id)
+        for user_session in user_sessions:
+            self.user_session_repository.delete(user_session.id)
         return self.user_repository.delete(id)

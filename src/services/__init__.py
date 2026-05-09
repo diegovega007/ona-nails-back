@@ -12,5 +12,6 @@ from .agenda_service import AgendaService
 from .service_type_service import ServiceTypeService
 from .promotion_service import PromotionService
 from .instagram_service import InstagramService
+from .email_service import EmailService
 
-__all__ = ["ServiceService", "AppointmentService", "ClientService", "UserService", "AuthService", "LoginService", "GalleryService", "CloudinaryService", "GallerySettingService", "AppointmentServiceService", "AgendaService", "ServiceTypeService", "PromotionService", "InstagramService"]
+__all__ = ["ServiceService", "AppointmentService", "ClientService", "UserService", "AuthService", "LoginService", "GalleryService", "CloudinaryService", "GallerySettingService", "AppointmentServiceService", "AgendaService", "ServiceTypeService", "PromotionService", "InstagramService", "EmailService"]

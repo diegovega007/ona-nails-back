@@ -14,3 +14,7 @@ class UserSessionRepository(BaseRepository):
         statement = update(UserSession).where(UserSession.refresh_token == refresh_token).values(is_revoked=True)
         self.session.exec(statement)
         self.session.commit()
+
+    def get_all_by_user_id(self, user_id: int) -> list[UserSession]:
+        statement = select(UserSession).where(UserSession.user_id == user_id)
+        return self.session.exec(statement).all()
