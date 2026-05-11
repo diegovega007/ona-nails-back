@@ -7,6 +7,7 @@ from enum import Enum
 class Roles(str, Enum):
     ADMIN = "admin"
     RECEPTIONIST = "receptionist"
+    EMPLOYEE = "employee"
 
 class User(BaseModel, table=True):
     __tablename__ = "users"

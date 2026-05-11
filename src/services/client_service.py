@@ -31,6 +31,8 @@ class ClientService:
                     {
                         "id": appointment.id,
                         "appointment_date": appointment.appointment_date,
+                        "user_id": appointment.user_id,
+                        "user": appointment.user,
                         "detail_service": appointment.detail_service,
                         "list_services": list_services,
                         "status": appointment.status,

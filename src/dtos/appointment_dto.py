@@ -6,6 +6,7 @@ from ..models import AppointmentStatus
 from .client_dto import ClientResponseDTO, CreateClientDTO
 from .promotion_dto import PromotionResponseDTO
 from .service_dto import ServiceResponseDTO
+from .user_dto import UserResponseDTO
 class CreateAppointmentDTO(BaseModel):
     client: CreateClientDTO
     appointment_date: datetime
@@ -20,6 +21,7 @@ class CreateAppointmentDTO(BaseModel):
 class UpdateAppointmentDTO(BaseModel):
     id: int
     client_id: int
+    user_id: Optional[int] = None
     appointment_date: datetime
     detail_service: Optional[str] = None
     list_services: Optional[list[int]] = None
@@ -32,6 +34,8 @@ class UpdateAppointmentDTO(BaseModel):
 class AppointmentResponseDTO(BaseModel):
     id: int
     client: ClientResponseDTO
+    user_id: Optional[int] = None
+    user: Optional[UserResponseDTO] = None
     appointment_date: datetime
     detail_service: Optional[str] = None
     list_services: Optional[list[ServiceResponseDTO]] = None
@@ -55,6 +59,20 @@ class AppointmentResponseDTO(BaseModel):
                     "last_name": "Doe",
                     "cellphone": "+523178901234",
                     "email": "john.doe@example.com"
+                },
+                "user_id": 1,
+                "user": {
+                    "id": 1,
+                    "email": "john.doe@example.com",
+                    "first_name": "John",
+                    "last_name": "Doe",
+                    "cellphone": "+523178901234",
+                    "rol": "admin",
+                    "is_active": True,
+                    "last_login": "2021-01-01T00:00:00Z",
+                    "created_at": "2021-01-01T00:00:00Z",
+                    "modified_at": "2021-01-01T00:00:00Z",
+                    "last_login": "2021-01-01T00:00:00Z"
                 },
                 "list_services": [
                     {

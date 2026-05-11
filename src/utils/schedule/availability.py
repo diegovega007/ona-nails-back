@@ -21,11 +21,16 @@ def generate_available_slots(
     final_date: datetime,
     reserved_intervals: list[tuple[datetime, datetime]],
     slot_minutes: int = 30,
+    max_concurrent: int = 1,
 ) -> list[datetime]:
     """
     Genera horarios disponibles dentro de un rango (inclusive),
     respetando horario laboral MX y excluyendo intervalos reservados.
     Los slots se generan siempre en zona horaria America/Mexico_City.
+
+    max_concurrent: cuántas citas pueden solaparse en el mismo instante (p. ej.
+    cantidad de profesionales activos). Con valor 1 se comporta como antes: una sola
+    reserva bloquea el hueco.
     """
     mx_initial = _to_mx(initial_date)
     mx_final = _to_mx(final_date)
@@ -35,6 +40,7 @@ def generate_available_slots(
     for start, end in reserved_intervals:
         normalized.append((_to_mx(start), _to_mx(end)))
 
+    capacity = max(0, max_concurrent)
     available: list[datetime] = []
 
     day: date = mx_initial.date()
@@ -60,13 +66,13 @@ def generate_available_slots(
 
             slot_end = cursor + timedelta(minutes=slot_minutes)
 
-            overlaps = False
-            for reserved_start, reserved_end in normalized:
-                if cursor < reserved_end and slot_end > reserved_start:
-                    overlaps = True
-                    break
+            overlap_count = sum(
+                1
+                for reserved_start, reserved_end in normalized
+                if cursor < reserved_end and slot_end > reserved_start
+            )
 
-            if not overlaps:
+            if overlap_count < capacity:
                 available.append(cursor)
 
             cursor += timedelta(minutes=slot_minutes)

@@ -23,6 +23,9 @@ class UserService:
         users = self.user_repository.get_all()
         return [UserResponseDTO.model_validate(user) for user in users]
 
+    def count_active_bookable_staff(self) -> int:
+        return self.user_repository.count_active_bookable_staff()
+
     def get_user_by_id(self, id: int) -> UserResponseDTO:
         user = self.user_repository.get_by_id(id)
         if not user:

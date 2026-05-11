@@ -91,7 +91,21 @@ class ClientAppointmentsResponseDTO(BaseModel):
                         "id": 1,
                         "appointment_date": "2021-01-01T00:00:00Z",
                         "detail_service": "Detail of service 1",
-                        "list_services": [
+                        "user_id": 1,
+                        "user": {
+                            "id": 1,
+                            "email": "john.doe@example.com",
+                            "first_name": "John",
+                            "last_name": "Doe",
+                            "cellphone": "+523178901234",
+                            "rol": "admin",
+                            "is_active": True,
+                            "last_login": "2021-01-01T00:00:00Z",
+                            "created_at": "2021-01-01T00:00:00Z",
+                            "modified_at": "2021-01-01T00:00:00Z",
+                            "last_login": "2021-01-01T00:00:00Z"
+                            },
+                                "list_services": [
                             {
                                 "id": 1,
                                 "name": "Service 1",

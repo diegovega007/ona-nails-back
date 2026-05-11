@@ -1,4 +1,4 @@
-from ..repositories import AppointmentRepository, PromotionRepository
+from ..repositories import AppointmentRepository, PromotionRepository, UserRepository
 from .service_service import ServiceService
 from .client_service import ClientService
 from .appointment_service_service import AppointmentServiceService
@@ -7,7 +7,7 @@ from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists
 from datetime import datetime
 from ..models import Appointment, AppointmentStatus
 from ..utils.promotions import get_promotion
-
+import random
 class AppointmentService:
     def __init__(
         self,
@@ -16,12 +16,14 @@ class AppointmentService:
         client_service: ClientService,
         appointment_service_service: AppointmentServiceService,
         promotion_repository: PromotionRepository,
+        user_repository: UserRepository,
     ):
         self.appointment_repository = appointment_repository
         self.client_service = client_service
         self.service_service = service_service
         self.appointment_service_service = appointment_service_service
         self.promotion_repository = promotion_repository
+        self.user_repository = user_repository
 
     def create_appointment(self, appointment_dto: CreateAppointmentDTO) -> AppointmentResponseDTO:
         client = self.client_service.create(appointment_dto.client)
@@ -34,10 +36,14 @@ class AppointmentService:
         if appointment_dto.duration is None:
             appointment_dto.duration = self._duration_from_service_ids(appointment_dto.list_services)
 
+        available_users = self.user_repository.get_available_user()
+        user_id = random.choice(available_users).id
+
         appointment = self.appointment_repository.create(
             Appointment(
-                **appointment_dto.model_dump(exclude={"client", "list_services"}),
+                **appointment_dto.model_dump(exclude={"client", "list_services", "user"}),
                 client_id=client.id,
+                user_id=user_id,
                 created_at=datetime.now(),
             )
         )
@@ -53,6 +59,8 @@ class AppointmentService:
             {
                 "id": appointment.id,
                 "client": client,
+                "user_id": appointment.user_id,
+                "user": appointment.user,
                 "appointment_date": appointment.appointment_date,
                 "detail_service": appointment.detail_service,
                 "status": appointment.status,
@@ -116,7 +124,7 @@ class AppointmentService:
             )
         appointment = self.appointment_repository.update(
             Appointment(
-                **appointment_dto.model_dump(exclude={"list_services", "discount"}),
+                **appointment_dto.model_dump(exclude={"list_services"}),
                 modified_at=datetime.now(),
             )
         )
@@ -163,6 +171,8 @@ class AppointmentService:
             {
                 "id": appointment.id,
                 "client": appointment.client,
+                "user_id": appointment.user_id,
+                "user": appointment.user,
                 "appointment_date": appointment.appointment_date,
                 "detail_service": appointment.detail_service,
                 "list_services": list_services,
@@ -191,4 +201,3 @@ class AppointmentService:
         if not services:
             return 0
         return sum(service.duration for service in services)
-

@@ -67,3 +67,4 @@ class ServiceService:
         if service.photo_public_id:
             self.cloudinary_service.delete([service.photo_public_id])
         return self.service_repository.delete(id)
+
