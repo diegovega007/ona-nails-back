@@ -6,8 +6,10 @@ from ..repositories import AppointmentRepository, ClientRepository, ServiceRepos
 from ..config import get_session
 from sqlmodel import Session
 from ..models import AppointmentStatus
-from ..utils.auth_dependency import authorization_header
+from ..utils.auth_dependency import authorization_header, current_user, optional_current_user
+from ..models import User
 from datetime import datetime
+from typing import Optional
 
 def get_appointment_service(session: Session = Depends(get_session)) -> AppointmentService:
     return AppointmentService(
@@ -22,8 +24,12 @@ def get_appointment_service(session: Session = Depends(get_session)) -> Appointm
 router = APIRouter(prefix="/appointments", tags=["Appointments"])
 
 @router.post("/", response_model=AppointmentResponseDTO, status_code=status.HTTP_201_CREATED)
-def create_appointment(appointment_dto: CreateAppointmentDTO, appointment_service: AppointmentService = Depends(get_appointment_service)):
-    return appointment_service.create_appointment(appointment_dto)
+def create_appointment(
+    appointment_dto: CreateAppointmentDTO,
+    appointment_service: AppointmentService = Depends(get_appointment_service),
+    user: Optional[User] = Depends(optional_current_user),
+):
+    return appointment_service.create_appointment(appointment_dto, current_user=user.email if user else "system")
 
 @router.get("/", response_model=list[AppointmentResponseDTO], status_code=status.HTTP_200_OK)
 def get_all_appointments(
@@ -39,8 +45,12 @@ def get_appointment_by_id(id: int, appointment_service: AppointmentService = Dep
     return appointment_service.get_appointment_by_id(id)
 
 @router.put("/", response_model=AppointmentResponseDTO, status_code=status.HTTP_200_OK)
-def update_appointment(appointment_dto: UpdateAppointmentDTO, appointment_service: AppointmentService = Depends(get_appointment_service)):
-    return appointment_service.update_appointment(appointment_dto)
+def update_appointment(
+    appointment_dto: UpdateAppointmentDTO,
+    appointment_service: AppointmentService = Depends(get_appointment_service),
+    user: User = Depends(current_user),
+):
+    return appointment_service.update_appointment(appointment_dto, current_user=user.email)
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_appointment(id: int, appointment_service: AppointmentService = Depends(get_appointment_service), auth: dict = Depends(authorization_header)):

@@ -12,12 +12,13 @@ MX_TZ = ZoneInfo("America/Mexico_City")
 
 def get_agenda_service(session: Session = Depends(get_session)) -> AgendaService:
     return AgendaService(
-        appointment_service=AppointmentService(
+         appointment_service=AppointmentService(
             appointment_repository=AppointmentRepository(session),
             service_service=ServiceService(ServiceRepository(session), CloudinaryService()),
             client_service=ClientService(ClientRepository(session)),
             appointment_service_service=AppointmentServiceService(AppointmentServiceRepository(session), ServiceService(ServiceRepository(session), CloudinaryService())),
             promotion_repository=PromotionRepository(session),
+            user_repository=UserRepository(session),
         ),
         user_service=UserService(UserRepository(session), AuthService(), UserSessionRepository(session)),
     )

@@ -3,6 +3,7 @@ from ..dtos import CreateServiceTypeDTO, UpdateServiceTypeDTO, ServiceTypeRespon
 from ..exeptions import ServiceTypeNotFound, ServiceTypeAlreadyExists
 from datetime import datetime
 from ..models import ServiceType
+from ..utils.auth_dependency import current_user
 
 class ServiceTypeService:
     def __init__(self, service_type_repository: ServiceTypeRepository):
@@ -18,20 +19,20 @@ class ServiceTypeService:
             raise ServiceTypeNotFound()
         return ServiceTypeResponseDTO.model_validate(service_type)
 
-    def create_service_type(self, service_type_dto: CreateServiceTypeDTO) -> ServiceTypeResponseDTO:
+    def create_service_type(self, service_type_dto: CreateServiceTypeDTO, current_user: str = "system") -> ServiceTypeResponseDTO:
         if self.service_type_repository.get_by_name(service_type_dto.name):
             raise ServiceTypeAlreadyExists()
         service_type = self.service_type_repository.create(
-            ServiceType(**service_type_dto.model_dump(), created_by="system", created_at=datetime.now())
+            ServiceType(**service_type_dto.model_dump(), created_by=current_user, created_at=datetime.now())
         )
         return ServiceTypeResponseDTO.model_validate(service_type)
 
-    def update_service_type(self, service_type_dto: UpdateServiceTypeDTO) -> ServiceTypeResponseDTO:
+    def update_service_type(self, service_type_dto: UpdateServiceTypeDTO, current_user: str = "system") -> ServiceTypeResponseDTO:
         service_type = self.service_type_repository.get_by_id(service_type_dto.id)
         if not service_type:
             raise ServiceTypeNotFound()
         service_type = self.service_type_repository.update(
-            ServiceType(**service_type_dto.model_dump(), modified_by="system", modified_at=datetime.now())
+            ServiceType(**service_type_dto.model_dump(), modified_by=current_user, modified_at=datetime.now())
         )
         return ServiceTypeResponseDTO.model_validate(service_type)
     

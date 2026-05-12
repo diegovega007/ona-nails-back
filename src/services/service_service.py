@@ -11,11 +11,11 @@ class ServiceService:
         self.service_repository = service_repository
         self.cloudinary_service = cloudinary_service
 
-    def create_service(self, service_dto: CreateServiceDTO) -> ServiceResponseDTO:
+    def create_service(self, service_dto: CreateServiceDTO, current_user: str = "system") -> ServiceResponseDTO:
         if self.service_repository.get_by_name(service_dto.name):
             raise ServiceAlreadyExists()
         service = self.service_repository.create(
-            Service(**service_dto.model_dump(), created_by="system", created_at=datetime.now())
+            Service(**service_dto.model_dump(), created_by=current_user, created_at=datetime.now())
         )
         return ServiceResponseDTO.model_validate(service)
 
@@ -29,7 +29,7 @@ class ServiceService:
             raise ServiceNotFound()
         return ServiceResponseDTO.model_validate(service)
 
-    def update_service(self, service_dto: UpdateServiceDTO) -> ServiceResponseDTO:
+    def update_service(self, service_dto: UpdateServiceDTO, current_user: str = "system") -> ServiceResponseDTO:
         service = self.service_repository.get_by_id(service_dto.id)
         if not service:
             raise ServiceNotFound()
@@ -38,7 +38,7 @@ class ServiceService:
                 **service_dto.model_dump(),
                 photo=service.photo,
                 photo_public_id=service.photo_public_id,
-                modified_by="system",
+                modified_by=current_user,
                 modified_at=datetime.now(),
             )
         )

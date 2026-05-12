@@ -20,15 +20,15 @@ class AppointmentServiceService:
             raise AppointmentServiceNotFound()
         return AppointmentServiceResponseDTO.model_validate(appointment_service)
 
-    def create_appointment_service(self, create_appointment_service_dto: CreateAppointmentServiceDTO) -> list[AppointmentServiceResponseDTO]:
+    def create_appointment_service(self, create_appointment_service_dto: CreateAppointmentServiceDTO, current_user: str = "system") -> list[AppointmentServiceResponseDTO]:
         appointment_services = []
         for service_id in create_appointment_service_dto.service_ids:
             service = self.service_service.get_service_by_id(service_id)
-            appointment_services.append(AppointmentService(service_id=service.id, appointment_id=create_appointment_service_dto.appointment_id, created_at=datetime.now(), created_by="system"))
+            appointment_services.append(AppointmentService(service_id=service.id, appointment_id=create_appointment_service_dto.appointment_id, created_at=datetime.now(), created_by=current_user))
         appointment_services = self.appointment_service_repository.create_many(appointment_services)
         return [AppointmentServiceResponseDTO.model_validate(appointment_service) for appointment_service in appointment_services]
 
-    def update_appointment_service(self, update_appointment_service_dto: UpdateAppointmentServiceDTO) -> list[AppointmentServiceResponseDTO]:
+    def update_appointment_service(self, update_appointment_service_dto: UpdateAppointmentServiceDTO, current_user: str = "system") -> list[AppointmentServiceResponseDTO]:
         appointment_services = []
         appointment_services_query  = self.get_all_appointment_services(update_appointment_service_dto.appointment_id)
         appointment_services_ids = [appointment_service.id for appointment_service in appointment_services_query]
@@ -38,7 +38,7 @@ class AppointmentServiceService:
     
         for service_id in update_appointment_service_dto.service_ids:
             service = self.service_service.get_service_by_id(service_id)
-            appointment_services.append(AppointmentService(service_id=service.id, appointment_id=update_appointment_service_dto.appointment_id, created_at=datetime.now(), created_by="system"))
+            appointment_services.append(AppointmentService(service_id=service.id, appointment_id=update_appointment_service_dto.appointment_id, created_at=datetime.now(), created_by=current_user))
 
         appointment_services = self.appointment_service_repository.create_many(appointment_services)
         return [AppointmentServiceResponseDTO.model_validate(appointment_service) for appointment_service in appointment_services]

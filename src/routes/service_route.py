@@ -6,6 +6,8 @@ from ..repositories import ServiceRepository
 from ..config import get_session
 from ..utils.auth_dependency import authorization_header
 from sqlmodel import Session
+from ..models import User
+from ..utils.auth_dependency import current_user
 
 def get_service_service(session: Session = Depends(get_session)) -> ServiceService:
     return ServiceService(ServiceRepository(session), CloudinaryService())
@@ -13,8 +15,9 @@ def get_service_service(session: Session = Depends(get_session)) -> ServiceServi
 router = APIRouter(prefix="/services", tags=["Services"])
 
 @router.post("/", response_model=ServiceResponseDTO, status_code=status.HTTP_201_CREATED)
-def create_service(service_dto: CreateServiceDTO, service_service: ServiceService = Depends(get_service_service), auth: dict = Depends(authorization_header)):
-    return service_service.create_service(service_dto)
+def create_service(service_dto: CreateServiceDTO, service_service: ServiceService = Depends(get_service_service), auth: dict = Depends(authorization_header),
+    user: User = Depends(current_user)):
+    return service_service.create_service(service_dto, current_user=user.email)
 
 @router.get("/", response_model=list[ServiceResponseDTO], status_code=status.HTTP_200_OK)
 def get_all_services(service_service: ServiceService = Depends(get_service_service)):
@@ -25,8 +28,9 @@ def get_service_by_id(id: int, service_service: ServiceService = Depends(get_ser
     return service_service.get_service_by_id(id)
 
 @router.put("/", response_model=ServiceResponseDTO, status_code=status.HTTP_200_OK)
-def update_service(service_dto: UpdateServiceDTO, service_service: ServiceService = Depends(get_service_service), auth: dict = Depends(authorization_header)):
-    return service_service.update_service(service_dto)
+def update_service(service_dto: UpdateServiceDTO, service_service: ServiceService = Depends(get_service_service), auth: dict = Depends(authorization_header),
+    user: User = Depends(current_user)):
+    return service_service.update_service(service_dto, current_user=user.email)
 
 @router.post("/{id}/photo", response_model=ServiceResponseDTO, status_code=status.HTTP_200_OK)
 def upload_photo(id: int, file: UploadFile = File(...), service_service: ServiceService = Depends(get_service_service), auth: dict = Depends(authorization_header)):

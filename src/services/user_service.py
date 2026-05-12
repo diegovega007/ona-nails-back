@@ -31,6 +31,12 @@ class UserService:
         if not user:
             raise UserNotFound()
         return UserResponseDTO.model_validate(user)     
+
+    def get_user_by_email(self, email: str) -> UserResponseDTO:
+        user = self.user_repository.get_by_email(email)
+        if not user:
+            raise UserNotFound()
+        return UserResponseDTO.model_validate(user)
     
     def update_user(self, user_dto: UpdateUserDTO) -> UserResponseDTO:
         user = self.user_repository.get_by_id(user_dto.id)

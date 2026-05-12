@@ -25,7 +25,7 @@ class AppointmentService:
         self.promotion_repository = promotion_repository
         self.user_repository = user_repository
 
-    def create_appointment(self, appointment_dto: CreateAppointmentDTO) -> AppointmentResponseDTO:
+    def create_appointment(self, appointment_dto: CreateAppointmentDTO, current_user: str = "system") -> AppointmentResponseDTO:
         client = self.client_service.create(appointment_dto.client)
         if self.appointment_repository.get_all(cellphone=client.cellphone, status=AppointmentStatus.RECEIVED):
             raise AppointmentAlreadyExists()
@@ -51,7 +51,8 @@ class AppointmentService:
             CreateAppointmentServiceDTO(
                 appointment_id=appointment.id, 
                 service_ids=appointment_dto.list_services
-            )
+            ),
+            current_user=current_user,
         )
         list_services = [appointment_service.service for appointment_service in appointment_services]
 
@@ -75,7 +76,7 @@ class AppointmentService:
             }
         )
     
-    def update_appointment(self, appointment_dto: UpdateAppointmentDTO) -> AppointmentResponseDTO:
+    def update_appointment(self, appointment_dto: UpdateAppointmentDTO, current_user: str = "system") -> AppointmentResponseDTO:
         appointment = self.appointment_repository.get_by_id(appointment_dto.id)
         if not appointment:
             raise AppointmentNotFound()
@@ -133,7 +134,8 @@ class AppointmentService:
             UpdateAppointmentServiceDTO(
                 appointment_id=appointment.id,
                 service_ids=service_ids,
-            )
+            ),
+            current_user=current_user,
         )
         list_services = [
             appointment_service.service
