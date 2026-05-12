@@ -7,6 +7,7 @@ from datetime import datetime
 
 _APPOINTMENT_LOAD_OPTIONS = (
     selectinload(Appointment.client),
+    selectinload(Appointment.user),
     selectinload(Appointment.appointment_services).selectinload(
         AppointmentService.service
     ),
