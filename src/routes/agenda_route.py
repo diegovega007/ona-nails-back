@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from ..services import AgendaService, AppointmentService, AuthService, UserService
-from ..repositories import AppointmentRepository, ServiceRepository, ClientRepository, AppointmentServiceRepository, PromotionRepository, UserRepository, UserSessionRepository
+from ..services import AgendaService, AppointmentService
+from ..repositories import AppointmentRepository, ServiceRepository, ClientRepository, AppointmentServiceRepository, PromotionRepository, UserRepository
 from ..config import get_session
 from sqlmodel import Session
 from ..services import ServiceService, CloudinaryService, ClientService, AppointmentServiceService
@@ -12,7 +12,7 @@ MX_TZ = ZoneInfo("America/Mexico_City")
 
 def get_agenda_service(session: Session = Depends(get_session)) -> AgendaService:
     return AgendaService(
-         appointment_service=AppointmentService(
+        appointment_service=AppointmentService(
             appointment_repository=AppointmentRepository(session),
             service_service=ServiceService(ServiceRepository(session), CloudinaryService()),
             client_service=ClientService(ClientRepository(session)),
@@ -20,13 +20,18 @@ def get_agenda_service(session: Session = Depends(get_session)) -> AgendaService
             promotion_repository=PromotionRepository(session),
             user_repository=UserRepository(session),
         ),
-        user_service=UserService(UserRepository(session), AuthService(), UserSessionRepository(session)),
+        user_repository=UserRepository(session),
     )
 
 router = APIRouter(prefix="/agenda", tags=["Agenda"])
 
 @router.get("/", response_model=AgendaResponseDTO)
-def get_agenda(initial_date: datetime, final_date: datetime, agenda_service: AgendaService = Depends(get_agenda_service)):
+def get_agenda(
+    initial_date: datetime,
+    final_date: datetime,
+    duration: int | None = None,
+    agenda_service: AgendaService = Depends(get_agenda_service),
+):
     # Si initial_date es naive, asumir UTC (viene de toISOString() del frontend)
     if initial_date.tzinfo is None:
         initial_date = initial_date.replace(tzinfo=timezone.utc)
@@ -40,4 +45,4 @@ def get_agenda(initial_date: datetime, final_date: datetime, agenda_service: Age
         if now_mx > initial_date_mx:
             initial_date = now_mx
 
-    return agenda_service.get_agenda(initial_date, final_date)
+    return agenda_service.get_agenda(initial_date, final_date, duration=duration)

@@ -3,7 +3,7 @@ from .service_service import ServiceService
 from .client_service import ClientService
 from .appointment_service_service import AppointmentServiceService
 from ..dtos import CreateAppointmentDTO, UpdateAppointmentDTO, AppointmentResponseDTO, CreateAppointmentServiceDTO, UpdateAppointmentServiceDTO, UpdateClientDTO, ServiceResponseDTO
-from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists
+from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists, AppointmentDateNotAvailable
 from datetime import datetime
 from ..models import Appointment, AppointmentStatus
 from ..utils.promotions import get_promotion
@@ -36,7 +36,13 @@ class AppointmentService:
         if appointment_dto.duration is None:
             appointment_dto.duration = self._duration_from_service_ids(appointment_dto.list_services)
 
-        available_users = self.user_repository.get_available_user()
+        available_users = self.user_repository.get_available_user(
+            appointment_date=appointment_dto.appointment_date,
+            duration=appointment_dto.duration,
+        )
+        if not available_users:
+            raise AppointmentDateNotAvailable()
+
         user_id = random.choice(available_users).id
 
         appointment = self.appointment_repository.create(
