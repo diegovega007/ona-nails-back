@@ -3,9 +3,9 @@ from .service_service import ServiceService
 from .client_service import ClientService
 from .appointment_service_service import AppointmentServiceService
 from ..dtos import CreateAppointmentDTO, UpdateAppointmentDTO, AppointmentResponseDTO, CreateAppointmentServiceDTO, UpdateAppointmentServiceDTO, UpdateClientDTO, ServiceResponseDTO
-from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists, AppointmentDateNotAvailable
+from ..exeptions import AppointmentNotFound, AppointmentAlreadyExists, AppointmentDateNotAvailable, AppointmentInvalidAssignee
 from datetime import datetime
-from ..models import Appointment, AppointmentStatus
+from ..models import Appointment, AppointmentStatus, Roles
 from ..utils.promotions import get_promotion
 import random
 class AppointmentService:
@@ -36,18 +36,25 @@ class AppointmentService:
         if appointment_dto.duration is None:
             appointment_dto.duration = self._duration_from_service_ids(appointment_dto.list_services)
 
-        available_users = self.user_repository.get_available_user(
-            appointment_date=appointment_dto.appointment_date,
-            duration=appointment_dto.duration,
-        )
-        if not available_users:
-            raise AppointmentDateNotAvailable()
-
-        user_id = random.choice(available_users).id
+        if appointment_dto.user_id is not None:
+            assignee = self.user_repository.get_by_id(appointment_dto.user_id)
+            if assignee is None:
+                raise AppointmentInvalidAssignee(detail="Profesional no encontrado")
+            if not assignee.is_active or assignee.rol == Roles.RECEPTIONIST:
+                raise AppointmentInvalidAssignee()
+            user_id = assignee.id
+        else:
+            available_users = self.user_repository.get_available_user(
+                appointment_date=appointment_dto.appointment_date,
+                duration=appointment_dto.duration,
+            )
+            if not available_users:
+                raise AppointmentDateNotAvailable()
+            user_id = random.choice(available_users).id
 
         appointment = self.appointment_repository.create(
             Appointment(
-                **appointment_dto.model_dump(exclude={"client", "list_services", "user"}),
+                **appointment_dto.model_dump(exclude={"client", "list_services", "user_id"}),
                 client_id=client.id,
                 user_id=user_id,
                 created_at=datetime.now(),

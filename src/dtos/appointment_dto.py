@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional
 
@@ -17,6 +17,10 @@ class CreateAppointmentDTO(BaseModel):
     subtotal: Optional[float] = None
     total: Optional[float] = None
     duration: Optional[int] = None
+    user_id: Optional[int] = Field(
+        default=None,
+        description="Profesional asignado (panel admin: sin comprobar agenda). Si no se envía, se elige al azar entre los libres en ese horario.",
+    )
 
 class UpdateAppointmentDTO(BaseModel):
     id: int

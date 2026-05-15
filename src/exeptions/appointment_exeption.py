@@ -15,3 +15,8 @@ class AppointmentDateNotAvailable(HTTPException):
 class AppointmentClientNotFound(HTTPException):
     def __init__(self, detail: str = "El cliente no tiene citas"):
         super().__init__(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
+
+
+class AppointmentInvalidAssignee(HTTPException):
+    def __init__(self, detail: str = "El profesional no puede ser asignado a la cita"):
+        super().__init__(status_code=status.HTTP_400_BAD_REQUEST, detail=detail)

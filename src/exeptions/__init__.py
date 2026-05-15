@@ -1,5 +1,5 @@
 from .service_exeption import ServiceNotFound, ServiceAlreadyExists
-from .appointment_exeption import AppointmentNotFound, AppointmentAlreadyExists, AppointmentDateNotAvailable, AppointmentClientNotFound
+from .appointment_exeption import AppointmentNotFound, AppointmentAlreadyExists, AppointmentDateNotAvailable, AppointmentClientNotFound, AppointmentInvalidAssignee
 from .client_exeption import ClientAlreadyExists, ClientNotFound
 from .user_exeption import UserNotFound, UserAlreadyExists, UserInactive
 from .auth_exeption import InvalidCredentialsException, TokenExpiredException
@@ -12,7 +12,7 @@ from .service_type_exeption import ServiceTypeNotFound, ServiceTypeAlreadyExists
 from .media_exeption import InstagramMediaException
 
 __all__ = ["ServiceNotFound", "ServiceAlreadyExists", "AppointmentNotFound", "AppointmentAlreadyExists", "AppointmentDateNotAvailable", 
-"ClientAlreadyExists", "AppointmentClientNotFound", "UserNotFound", "UserAlreadyExists", "UserInactive", "InvalidCredentialsException", 
+"ClientAlreadyExists", "AppointmentClientNotFound", "AppointmentInvalidAssignee", "UserNotFound", "UserAlreadyExists", "UserInactive", "InvalidCredentialsException", 
 "TokenExpiredException", "UserSessionNotFound", "UserSessionRevoked", "CloudinaryException", "GalleryNotFound", "AppointmentServiceNotFound",
  "PromotionNotFound", "ClientNotFound", "PromotionAlreadyExists", "PromotionDiscountRateNotSet", "ServiceTypeNotFound", "ServiceTypeAlreadyExists"
  , "InstagramMediaException"]
