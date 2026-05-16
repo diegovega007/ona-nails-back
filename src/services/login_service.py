@@ -20,9 +20,9 @@ class LoginService:
         if not user:
             raise UserNotFound()
         
-        user = self.user_repository.get_active_account(login_dto.email)
-        if not user:
-            raise UserInactive()
+        # user = self.user_repository.get_active_account(login_dto.email)
+        # if not user:
+        #     raise UserInactive()
         
         if not self.auth_service.verify_password(
             login_dto.password, 

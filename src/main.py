@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from .config import API_VERSION, create_db_and_tables
 from .utils.error_handler_middleware import ErrorHandlerMiddleware
-
+from .utils.admin_seed import seed_admin
 #Registro de modelos
 from .models import Service, Client, Appointment, User, UserSession, Gallery, GallerySetting, AppointmentService, ServiceType, Promotion
 
@@ -27,6 +27,8 @@ app = FastAPI(
 )
 
 create_db_and_tables()
+
+seed_admin()
 
 app.add_middleware(ErrorHandlerMiddleware)
 
