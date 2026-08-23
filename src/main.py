@@ -24,6 +24,7 @@ app = FastAPI(
     title="OnaNails API",
     description="API para el sistema de OnaNails",
     version=API_VERSION,
+    root_path="/api"
 )
 
 create_db_and_tables()
